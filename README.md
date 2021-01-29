@@ -9,9 +9,12 @@
 |  刘业畅  | 18340120 |    设计网页，完成前端工作，实现合约附加功能，编写实验报告    |
 
 ## 代码运行说明
-按照FISCO-BCOS官方教程准备好python-sdk和相关依赖环境后，将platform.sol放在python-sdk/contracts/下，其余文件放在python-sdk/下。此外需要额外使用pip下载Django包。
+源代码和相关依赖在 `src` 文件夹中；按照FISCO-BCOS官方教程准备好python-sdk和相关依赖环境后，将platform.sol放在python-sdk/contracts/下，其余文件放在python-sdk/下；此外需要额外使用pip下载Django包。
 
 启动方式：使用命令行进入路径python-sdk/，首先运行使用命令python INIT.py编译、部署智能合约，完成初始化；然后使用命令python manage.py runserver运行Django web框架。打开浏览器输入命令行提示的网址即可使用。
+
+## 加分项
+加分项的实现与代码说明请移步报告文件 `report.pdf` 的 Chapter2。
 
 ## 联系方式
 Email: lixd36@mail2.sysu.edu.cn

@@ -16,7 +16,10 @@
 启动方式：使用命令行进入路径python-sdk/，首先运行使用命令python INIT.py编译、部署智能合约，完成初始化；然后使用命令python manage.py runserver运行Django web框架。打开浏览器输入命令行提示的网址即可使用。
 
 ## 加分项
-加分项的实现与代码说明请移步报告文件 `report.pdf` 的 Chapter2。
+加分项的实现与代码说明请移步报告文件 `report.pdf` 的 Chapter2，简要说明如下：
++ 实现了附加功能：包括企业破产申请与处理、撤销交易、完备的身份验证、部分偿还、信任机构审批账单等功能；
++ 通过同态加密实现链上数据隐私保护；
++ 使用 Django 框架，实现了友好高效的用户界面；
 
 ## 联系方式
 Email: lixd36@mail2.sysu.edu.cn

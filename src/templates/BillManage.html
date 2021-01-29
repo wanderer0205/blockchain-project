@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>账单管理系统</title>
+
+	<!-- Bootstrap -->
+	<link href="/static/css/bootstrap-4.0.0.css" rel="stylesheet">
+	<link href="/static/css/my.css" rel="stylesheet">
+</head>
+
+<body>
+
+	<div class="jumbotron jumbotron-fluid text-center" style="background:url(/static/7.jpg);background-size: 100% ;background-origin:border-box;opacity: 0.9;">
+		<h1 class="display-diy" style="font-size: 70px;color: #130101d8;">账单管理系统</h1>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-2">
+				<nav class="navbar navbar-light">
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="../choose/">首页</a>
+						</li>
+						<br>
+						<li class="nav-item">
+							<a class="nav-link" href="../basic/">基本信息</a>
+						</li>
+						<br>
+						<li class="nav-item active">
+							<a class="nav-link">账单管理<span class="sr-only">(current)</span></a>
+						</li>
+						<br>
+						<li class="nav-item">
+							<a class="nav-link" onclick="logout()">退出</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+			<div class="col-9">
+				<ul id="clothingnav1" class="nav nav-tabs mb-4" role="tablist">
+					<li class="nav-item"> <a class="nav-link active" href="#home1" id="hometab1" role="tab"
+							data-toggle="tab" aria-controls="home" aria-expanded="true">应收账单信息</a> </li>
+					<li class="nav-item"> <a class="nav-link" href="#paneTwo1" role="tab" id="panetab2"
+							data-toggle="tab" aria-controls="hats">应付账单信息</a> </li>
+				</ul>
+				<!-- Content Panel -->
+				<div id="clothingnavcontent1" class="tab-content">
+					<div role="tabpanel" class="tab-pane fade show active" id="home1" aria-labelledby="hometab1">
+						<div class="container-fluid">
+							<div class="row mb-4">
+								<div class="col-4">
+									<input id="search_bar" type="search" class="form-control mr-3" placeholder="请输入关键字"
+										aria-describedby="basicaddon1">
+								</div>
+								<div class="col-4">
+									<button type="button" class="btn btn-info mr-3" onclick="search_name(this)">搜债务人</button>
+									<button type="button" class="btn btn-info mr-3" onclick="search_ISBN(this)">搜债权人</button>
+									<button type="button" class="btn btn-info mr-3" onclick="search_ID(this)">搜账单ID</button>
+								</div>
+							</div>
+							<table class="table mb-4">
+								<tbody id="ToTbody">
+									<tr>
+										<th scope="col">账单id</th>
+										<th scope="col">应还时间</th>
+										<th scope="col">债务人</th>
+										<th scope="col">债权人</th>
+										<th scope="col">剩余未付金额</th>
+										<th scope="col">总金额</th>
+										<th scope="col">当前状态</th>
+										<th scope="col">操作</th>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+									{% if ToReceiptsList != None %}
+									{% for ToInfo in ToReceiptsList%}
+									<tr>
+										<td>{{ToInfo.id}}</td>
+										<td>{{ToInfo.due}}</td>
+										<td>{{ToInfo.from}}</td>
+										<td>{{ToInfo.to}}</td>
+										<td>{{ToInfo.cur_bill}}</td>
+										<td>{{ToInfo.ori_bill}}</td>
+										{% if ToInfo.status == 0 %}
+											<td>待审批</td>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										{% elif ToInfo.status == 1 %}
+											<td>生效中</td>
+											<td><button type="button" class="btn btn btn-primary" onclick="choose_Transfer(this)">转让</button></td>
+											<td><button type="button" class="btn btn btn-primary" onclick="choose_Finance(this)">单据融资</button></td>
+											<td><button type="button" class="btn btn btn-primary" onclick="choose_Revoke(this)">撤销</button></td>
+										{% elif ToInfo.status == -1 %}
+											<td>未通过</td>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										{% else %}
+											<td>已失效</td>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										{% endif %}
+									</tr>
+									{% endfor %}
+									{% endif %}
+									<!--
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td><button type="button" class="btn btn-info mr-3" onclick="add_finance(this)">信用融资</button></td>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>-->
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane fade" id="paneTwo1" aria-labelledby="panetab2">
+						<div class="container-fluid">
+							<div class="row mb-4">
+								<div class="col-4">
+									<input id="search_bar" type="search" class="form-control mr-3" placeholder="请输入关键字"
+										aria-describedby="basicaddon1">
+								</div>
+								<div class="col-4">
+									<button type="button" class="btn btn-info mr-3" onclick="search_name(this)">搜债务人</button>
+									<button type="button" class="btn btn-info mr-3" onclick="search_ISBN(this)">搜债权人</button>
+									<button type="button" class="btn btn-info mr-3" onclick="search_ID(this)">搜账单ID</button>
+								</div>
+							</div>
+							<table class="table mb-4">
+								<tbody id="FromTbody">
+									<tr>
+										<th scope="col">账单id</th>
+										<th scope="col">应还时间</th>
+										<th scope="col">债务人</th>
+										<th scope="col">债权人</th>
+										<th scope="col">剩余未付金额</th>
+										<th scope="col">总金额</th>
+										<th scope="col">当前状态</th>
+										<th scope="col">操作</th>
+										<td>&nbsp;</td>
+									</tr>
+									{% if FromReceiptsList != None %}
+									{% for FromInfo in FromReceiptsList%}
+									<tr>
+										<td>{{FromInfo.id}}</td>
+										<td>{{FromInfo.due}}</td>
+										<td>{{FromInfo.from}}</td>
+										<td>{{FromInfo.to}}</td>
+										<td>{{FromInfo.cur_bill}}</td>
+										<td>{{FromInfo.ori_bill}}</td>
+										{% if FromInfo.status == 0 %}
+											<td>待审批</td>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										{% elif FromInfo.status == 1 %}
+											<td>生效中</td>
+											<td><button type="button" class="btn btn btn-primary" onclick="choose_Repay(this)">还款</button></td>
+											<td><button type="button" class="btn btn btn-primary" onclick="choose_Revoke(this)">撤销</button></td>
+										{% elif FromInfo.status == -1 %}
+											<td>未通过</td>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										{% else %}
+											<td>已失效</td>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										{% endif %}
+									</tr>
+									{% endfor %}
+									{% endif %}
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td><button type="button" class="btn btn-info mr-3" onclick="add_Receipt(this)">添加</button></td>
+									<td>&nbsp;</td>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container"> <br>
+		<div class="row">
+			<div class="text-center col-lg-6 offset-lg-3">
+				<p>拉到最底部了 </p>
+				<p>Copyright &copy; 2020 &middot; All Rights Reserved</p>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="/static/js/jquery-3.2.1.min.js"></script>
+
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="/static/js/popper.min.js"></script>
+	<script src="/static/js/bootstrap-4.0.0.js"></script>
+	<script>
+		function choose_Repay(obj)
+		{
+			var parent=obj.parentNode.parentNode;
+			parent.children[7].removeChild(parent.children[7].children[0]);
+			parent.children[8].removeChild(parent.children[8].children[0]);
+
+			var targetElement=parent;// 在该元素后插入
+			var tparent=targetElement.parentNode;
+			var newElement=document.createElement("tr");
+			var ChildElement=new Array();
+			for (var i=0;i<9; i++)
+			{
+				ChildElement[i]=document.createElement("td");
+				if (i==4)
+				{
+					var tip=document.createElement("text");
+					tip.innerHTML="偿还金额：";
+					ChildElement[i].appendChild(tip);
+					var input=document.createElement("input");
+					input.setAttribute("type", "number");
+					input.setAttribute("id", targetElement.children[0].innerHTML+"_repaySum");
+					input.setAttribute("min", "0");
+					input.setAttribute("max", targetElement.children[4].innerHTML);
+					input.setAttribute("onchange", "refresh_paySum(this)");
+					input.setAttribute("value", "0");
+					input.setAttribute("placeholder", "0~"+targetElement.children[4].innerHTML);
+					ChildElement[i].appendChild(input);
+				}
+				else if (i==7)
+				{
+					var but = document.createElement("button");
+					but.setAttribute("type", "button");
+					but.setAttribute("class", "btn btn-info mr-3");
+					but.setAttribute("onclick", "send_repay(this)");
+					but.innerHTML="确认";
+					ChildElement[i].appendChild(but);
+				}
+				newElement.appendChild(ChildElement[i]);
+			}
+			if(tparent.lastChild==targetElement)
+    		    tparent.appendChild(newElement);
+			else
+    		    tparent.insertBefore(newElement,targetElement.nextSibling);
+		}
+
+		function refresh_paySum(obj)
+		{
+			if (obj.value=="")
+			obj.value=0;
+			if (parseInt(obj.value)>parseInt(obj.max))
+			obj.value=obj.max;
+			else if (parseInt(obj.value)<0)
+			obj.value=0;
+		}
+
+		function send_repay(obj)
+		{
+			var sendData={};
+
+			sendData.id=obj.parentNode.parentNode.previousSibling.children[0].innerHTML;
+			sendData.sum=$("#"+sendData.id+"_repaySum").val();
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("sendRepay/", sendData, function(data, status){
+				if (status=="success" && data.isSuss==0)
+					{
+						alert("偿还成功！");
+						location.reload();
+					}
+					else
+					alert("偿还失败！\n"+data.info);
+			});
+		}
+
+		function choose_Revoke(obj)
+		{
+			var CurrentID=obj.parentNode.parentNode.children[0].innerHTML;
+			if (confirm("请问是否确认撤销id为"+CurrentID+"的账单？"))
+			{
+				var sendData={};
+				sendData.id=CurrentID;
+				sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+				$.post("sendRevokeReceipt/", sendData, function(data, status){
+					if (status=="success" && data.isSuss==0)
+					{
+						alert("撤销成功！");
+						location.reload();
+					}
+					else
+					alert("撤销失败！");
+				});
+			}
+		}
+
+		function choose_Transfer(obj)
+		{
+			var parent=obj.parentNode.parentNode;
+			parent.children[7].removeChild(parent.children[7].children[0]);
+			parent.children[8].removeChild(parent.children[8].children[0]);
+			parent.children[9].removeChild(parent.children[9].children[0]);
+
+			var targetElement=parent;// 在该元素后插入
+			var tparent=targetElement.parentNode;
+			var newElement=document.createElement("tr");
+			var ChildElement=new Array();
+			for (var i=0; i<9; i++)
+			{
+				ChildElement[i]=document.createElement("td");
+				if (i!=0 && i<3)
+					ChildElement[i].innerHTML=targetElement.children[i].innerHTML;
+				else if (i==3)
+				{
+					var sel=document.createElement("select");
+					sel.setAttribute("id", "input_tran_to");
+					var sendData={};
+					sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+					$.post("getAliveCommonCompanyName/", sendData, function(data, status){
+						if (status=="success")
+						{
+							var len=data.name.length;
+							for (var j=0; j<len; j++)
+							{
+								if (data.name[j]==ChildElement[2].innerHTML)
+								continue;
+								var opt=document.createElement("option");
+								opt.setAttribute("value", data.name[j]);
+								opt.innerHTML=data.name[j];
+								sel.appendChild(opt);
+							}
+						}
+					});
+					ChildElement[i].appendChild(sel);
+				}
+				else if (i==4)
+				{
+					var tip=document.createElement("text");
+					tip.innerHTML="转让金额：";
+					ChildElement[i].appendChild(tip);
+					var input=document.createElement("input");
+					input.setAttribute("id", "input_tran_sum");
+					input.setAttribute("type", "number");
+					input.setAttribute("min", "0");
+					input.setAttribute("max", targetElement.children[4].innerHTML);
+					input.setAttribute("onchange", "refresh_paySum(this)");
+					input.setAttribute("value", "0");
+					input.setAttribute("placeholder", "0~"+targetElement.children[4].innerHTML);
+					ChildElement[i].appendChild(input);
+				}
+				else if (i == 5)
+					ChildElement[i].innerHTML=targetElement.children[i].innerHTML;
+				else if (i==7)
+				{
+					var but = document.createElement("button");
+					but.setAttribute("type", "button");
+					but.setAttribute("class", "btn btn-info mr-3");
+					but.setAttribute("onclick", "send_transfer(this)");
+					but.innerHTML="确认";
+					ChildElement[i].appendChild(but);
+				}
+				newElement.appendChild(ChildElement[i]);
+			}
+			if(tparent.lastChild==targetElement)
+    		    tparent.appendChild(newElement);
+			else
+    		    tparent.insertBefore(newElement,targetElement.nextSibling);
+		}
+
+		function send_transfer(obj)
+		{
+			var sendData={};
+
+			sendData.id=obj.parentNode.parentNode.previousSibling.children[0].innerHTML;
+			sendData.to=$("#input_tran_to").val();
+			sendData.sum=$("#input_tran_sum").val();
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("sendTransferReceipt/", sendData, function(data, status){
+				if (status=="success" && data.isSuss==0)
+					{
+						alert("转让成功！");
+						location.reload();
+					}
+					else
+					alert("转让失败！\n"+data.info);
+			});
+		}
+		
+		function choose_Finance(obj)
+		{
+			var parent=obj.parentNode.parentNode;
+			parent.children[7].removeChild(parent.children[7].children[0]);
+			parent.children[8].removeChild(parent.children[8].children[0]);
+			parent.children[9].removeChild(parent.children[9].children[0]);
+
+			var targetElement=parent;// 在该元素后插入
+			var tparent=targetElement.parentNode;
+			var newElement=document.createElement("tr");
+			var ChildElement=new Array();
+			for (var i=0; i<9; i++)
+			{
+				ChildElement[i]=document.createElement("td");
+				if (i!=0 && i<3)
+					ChildElement[i].innerHTML=targetElement.children[i].innerHTML;
+				else if (i==3)
+				{
+					var sel=document.createElement("select");
+					sel.setAttribute("id", targetElement.children[0].innerHTML+"_finan_to");
+					var sendData={};
+					sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+					$.post("getAliveBankName/", sendData, function(data, status){
+						if (status=="success")
+						{
+							var len=data.name.length;
+							for (var j=0; j<len; j++)
+							{
+								if (data.name[j]==ChildElement[2].innerHTML)
+								continue;
+								var opt=document.createElement("option");
+								opt.setAttribute("value", data.name[j]);
+								opt.innerHTML=data.name[j];
+								sel.appendChild(opt);
+							}
+						}
+					});
+					ChildElement[i].appendChild(sel);
+				}
+				else if (i==4)
+				{
+					var tip=document.createElement("text");
+					tip.innerHTML="融资金额：";
+					ChildElement[i].appendChild(tip);
+					var input=document.createElement("input");
+					input.setAttribute("id", targetElement.children[0].innerHTML+"_finan_sum");
+					input.setAttribute("type", "number");
+					input.setAttribute("min", "0");
+					input.setAttribute("max", targetElement.children[4].innerHTML);
+					input.setAttribute("onchange", "refresh_paySum(this)");
+					input.setAttribute("value", "0");
+					input.setAttribute("placeholder", "0~"+targetElement.children[4].innerHTML);
+					ChildElement[i].appendChild(input);
+				}
+				else if (i==7)
+				{
+					var but = document.createElement("button");
+					but.setAttribute("type", "button");
+					but.setAttribute("class", "btn btn-info mr-3");
+					but.setAttribute("onclick", "send_finance(this)");
+					but.innerHTML="确认";
+					ChildElement[i].appendChild(but);
+				}
+				newElement.appendChild(ChildElement[i]);
+			}
+			if(tparent.lastChild==targetElement)
+    		    tparent.appendChild(newElement);
+			else
+    		    tparent.insertBefore(newElement,targetElement.nextSibling);
+		}
+
+		function send_finance(obj)
+		{
+			var sendData={};
+
+			sendData.id=obj.parentNode.parentNode.previousSibling.children[0].innerHTML;
+			sendData.to=$("#"+sendData.id+"_finan_to").val();
+			sendData.sum=$("#"+sendData.id+"_finan_sum").val();
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("sendFinance/", sendData, function(data, status){
+				if (status=="success" && data.isSuss==0)
+					{
+						alert("融资成功！");
+						location.reload();
+					}
+					else
+					alert("融资失败！\n"+data.info);
+			});
+		}
+
+		function add_Receipt(obj)
+		{
+			var parent=obj.parentNode.parentNode;
+			var td=document.createElement("td");
+			var input=document.createElement("input");
+			input.setAttribute("type", "date");
+			input.setAttribute("id", "input_time");
+			input.setAttribute("name", "date_input");
+			td.appendChild(input);
+			parent.replaceChild(td, parent.children[1]);
+
+			var sendData={};
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("getAliveCompanyName/", sendData, function(data, status){
+				if (status=="success")
+				{
+					var td2=document.createElement("td");
+					td2.innerHTML = data.cname;
+					parent.replaceChild(td2, parent.children[2]);
+
+					td2=document.createElement("td");
+					var sel=document.createElement("select");
+					sel.setAttribute("id", "input_name");
+					var len=data.name.length;
+					for (var j=0; j<len; j++)
+					{
+						if (data.name[j]==data.cname)
+						continue;
+						var opt=document.createElement("option");
+						opt.setAttribute("value", data.name[j]);
+						opt.innerHTML=data.name[j];
+						sel.appendChild(opt);
+					}
+					td2.appendChild(sel);
+					parent.replaceChild(td2, parent.children[3]);
+				}
+			});
+
+			parent.children[4].innerHTML="0";
+
+			td=document.createElement("td");
+			input=document.createElement("input");
+			input.setAttribute("type", "number");
+			input.setAttribute("min", "0");
+			input.setAttribute("value", "0");
+			input.setAttribute("id", "input_sum");
+			input.setAttribute("name", "total_input");
+			input.setAttribute("onchange", "refresh_cur(this)");
+			input.setAttribute("placeholder", "请输入金额");
+			td.appendChild(input);
+			parent.replaceChild(td, parent.children[5]);
+
+			obj.setAttribute("class", "btn btn-warning")
+			obj.setAttribute("onclick", "send_addReceipt(this)");
+			obj.innerHTML="确认";
+		}
+
+		function refresh_cur(obj)
+		{
+			obj.parentNode.parentNode.children[4].innerHTML=obj.value;
+		}
+
+		function send_addReceipt(obj)
+		{
+			var sendData={};
+			sendData.name=$("#input_name").val();
+			sendData.time=$("#input_time").val();
+			sendData.sum=$("#input_sum").val();
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("sendAddReceipt/", sendData, function(data, status){
+				if (status=="success" && data.isSuss==0)
+					{
+						alert("添加成功！");
+						location.reload();
+					}
+					else
+					alert("添加失败！\n"+data.info);
+			});
+		}
+
+
+
+		/*
+		function add_finance(obj)
+		{
+			var parent=obj.parentNode.parentNode;
+			var td=document.createElement("td");
+			var input=document.createElement("input");
+			input.setAttribute("type", "date");
+			input.setAttribute("id", "new_finance_time");
+			input.setAttribute("name", "date_input");
+			td.appendChild(input);
+			parent.replaceChild(td, parent.children[1]);
+
+			var td2=document.createElement("td");
+			var sendData={};
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("getCompanyName/", sendData, function(data, status){
+				if (status=="success")
+				{
+					td2.innerHTML = data.name;
+					parent.replaceChild(td2, parent.children[2]);
+				}
+			});
+
+			td2=document.createElement("td");
+			var sel=document.createElement("select");
+			sel.setAttribute("id", targetElement.children[0].innerHTML+"_finan_to");
+			var sendData={};
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("getAliveBankName/", sendData, function(data, status){
+				if (status=="success")
+				{
+					var len=data.name.length;
+					for (var j=0; j<len; j++)
+					{
+						if (data.name[j]==ChildElement[2].innerHTML)
+						continue;
+						var opt=document.createElement("option");
+						opt.setAttribute("value", data.name[j]);
+						opt.innerHTML=data.name[j];
+						sel.appendChild(opt);
+					}
+					td2.appendChild(sel);
+					parent.replaceChild(td2, parent.children[3]);
+				}
+			});
+			//td2.appendChild(sel);
+			//parent.replaceChild(td2, parent.children[3]);
+
+			parent.children[4].innerHTML="0";
+
+			td=document.createElement("td");
+			input=document.createElement("input");
+			input.setAttribute("type", "number");
+			input.setAttribute("min", "0");
+			input.setAttribute("value", "0");
+			input.setAttribute("id", "input_sum");
+			input.setAttribute("name", "total_input");
+			input.setAttribute("onchange", "refresh_cur(this)");
+			input.setAttribute("placeholder", "请输入金额");
+			td.appendChild(input);
+			parent.replaceChild(td, parent.children[5]);
+
+			obj.setAttribute("class", "btn btn-warning")
+			obj.setAttribute("onclick", "send_finance2(this)");
+			obj.innerHTML="确认";
+		}
+
+		function refresh_cur(obj)
+		{
+			obj.parentNode.parentNode.children[4].innerHTML=obj.value;
+		}
+
+		function send_addReceipt(obj)
+		{
+			var sendData={};
+			sendData.name=$("#input_name").val();
+			sendData.time=$("#input_time").val();
+			sendData.sum=$("#input_sum").val();
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("sendAddReceipt/", sendData, function(data, status){
+				if (status=="success" && data.isSuss==0)
+					{
+						alert("添加成功！");
+						location.reload();
+					}
+					else
+					alert("添加失败！\n"+data.info);
+			});
+		}
+
+		*/
+
+
+		function logout()
+		{
+			var sendData={};
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("../logout/", sendData, function(data, status){
+				if (status=="success" && data.isSuss==0)
+				alert("退出成功！");
+				else
+				alert("退出失败");
+				location.reload();
+			});
+		}
+		//下面搜索部分不用修改
+		/*
+		function search_name(obj)  //【！】不用修改，原name对应新债务人
+		{
+			name=$('#search_bar').val();
+			var sendData={};
+			sendData.name=name;
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("search/name/", sendData, function(data, status){
+				if (status=="success"&&data.isSuss==0)
+				add_salesTable(data);
+			});
+		}
+		function search_ISBN(obj) //【！】不用修改，原isbn对应新债权人
+		{
+			ISBN=$('#search_bar').val();
+			var sendData={};
+			sendData.ISBN=ISBN;
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("search/ISBN/", sendData, function(data, status){
+				if (status=="success"&&data.isSuss==0)
+				add_salesTable(data);
+			});
+		}
+		function search_ID(obj) //【！】不用修改，原id对应新账单id
+		{
+			ID=$('#search_bar').val();
+			var sendData={};
+			sendData.ID=ID;
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("search/ID/", sendData, function(data, status){
+				if (status=="success"&&data.isSuss==0)
+				add_salesTable(data);
+			});
+		}*/
+	</script>
+</body>
+
+</html>

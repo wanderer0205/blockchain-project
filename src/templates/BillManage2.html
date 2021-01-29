@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>账单管理系统</title>
+
+	<!-- Bootstrap -->
+	<link href="/static/css/bootstrap-4.0.0.css" rel="stylesheet">
+	<link href="/static/css/my.css" rel="stylesheet">
+</head>
+
+<body>
+
+	<div class="jumbotron jumbotron-fluid text-center" style="background:url(/static/7.jpg);background-size: 100% ;background-origin:border-box;opacity: 0.9;">
+		<h1 class="display-diy" style="font-size: 70px;color: #130101d8;">账单管理系统</h1>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-2">
+				<nav class="navbar navbar-light">
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="../choose/">首页</a>
+						</li>
+						<br>
+						<li class="nav-item">
+							<a class="nav-link" href="../basic/">基本信息</a>
+                        </li>
+                        <br>
+						<li class="nav-item active">
+							<a class="nav-link">账单管理<span class="sr-only">(current)</span></a>
+						</li>
+						<br>
+						<li class="nav-item">
+							<a class="nav-link" href="../BusinessManage/">企业管理</a>
+                        </li>
+                        <br>
+						<li class="nav-item">
+							<a class="nav-link" onclick="logout()">退出</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+			<div class="col-9">
+				<ul id="clothingnav1" class="nav nav-tabs mb-4" role="tablist">
+					<li class="nav-item"> <a class="nav-link active" href="#home1" id="hometab1" role="tab"
+							data-toggle="tab" aria-controls="home" aria-expanded="true">账单信息</a> </li>
+				</ul>
+				<!-- Content Panel -->
+				<div id="clothingnavcontent1" class="tab-content">
+					<div role="tabpanel" class="tab-pane fade show active" id="home1" aria-labelledby="hometab1">
+						<div class="container-fluid">
+							<div class="row mb-4">
+								<div class="col-4">
+									<input id="search_bar" type="search" class="form-control mr-3" placeholder="请输入关键字"
+										aria-describedby="basicaddon1">
+								</div>
+								<div class="col-4">
+									<button type="button" class="btn btn-info mr-3" onclick="search_name(this)">搜债务人</button>
+									<button type="button" class="btn btn-info mr-3" onclick="search_ISBN(this)">搜债权人</button>
+									<button type="button" class="btn btn-info mr-3" onclick="search_ID(this)">搜账单ID</button>
+								</div>
+							</div>
+							<table class="table mb-4">
+								<tbody id="ToTbody">
+									<tr>
+										<th scope="col">账单id</th>
+										<th scope="col">应还时间</th>
+										<th scope="col">债务人</th>
+										<th scope="col">债权人</th>
+										<th scope="col">剩余未付金额</th>
+										<th scope="col">总金额</th>
+										<th scope="col">当前状态</th>
+										<th scope="col">操作</th>
+										<td>&nbsp;</td>
+									</tr>
+									{% if ToReceiptsList != None %}
+									{% for ToInfo in ToReceiptsList%}
+									<tr>
+										<td>{{ToInfo.id}}</td>
+										<td>{{ToInfo.due}}</td>
+										<td>{{ToInfo.from}}</td>
+										<td>{{ToInfo.to}}</td>
+										<td>{{ToInfo.cur_bill}}</td>
+										<td>{{ToInfo.ori_bill}}</td>
+										{% if ToInfo.status == 0 %}
+                                            <td>待审批</td>
+                                            <td><button type="button" class="btn btn btn-primary" onclick="choose_AgreeOrNot(this, 1)">通过</button></td>
+										    <td><button type="button" class="btn btn btn-primary" onclick="choose_AgreeOrNot(this, -1)">否决</button></td>
+										{% elif ToInfo.status == 1 %}
+                                            <td>生效中</td>
+                                            <td>&nbsp;</td>
+											<td>&nbsp;</td>
+										{% elif ToInfo.status == -1 %}
+											<td>未通过</td>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										{% else %}
+                                            <td>已失效</td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+										{% endif %}
+									</tr>
+									{% endfor %}
+									{% endif %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container"> <br>
+		<div class="row">
+			<div class="text-center col-lg-6 offset-lg-3">
+				<p>拉到最底部了 </p>
+				<p>Copyright &copy; 2020 &middot; All Rights Reserved</p>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="/static/js/jquery-3.2.1.min.js"></script>
+
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="/static/js/popper.min.js"></script>
+	<script src="/static/js/bootstrap-4.0.0.js"></script>
+	<script>
+		function choose_AgreeOrNot(obj, choice)
+		{
+            var sendData={};
+            sendData.id=obj.parentNode.parentNode.children[0].innerHTML;
+            sendData.choice=choice;
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("sendAgreeOrNot/", sendData, function(data, status){
+				if (status=="success" && data.isSuss==0)
+				{
+					alert("操作成功！");
+					location.reload();
+				}
+				else
+				alert("操作失败！\n"+data.info);
+			});
+		}
+
+		function logout()
+		{
+			var sendData={};
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("../logout/", sendData, function(data, status){
+				if (status=="success" && data.isSuss==0)
+				alert("退出成功！");
+				else
+				alert("退出失败！");
+				location.reload();
+			});
+		}
+	</script>
+</body>
+
+</html>

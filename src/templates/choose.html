@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>选择-供应链金融平台</title>
+
+	<!-- Bootstrap -->
+	<link href="/static/css/bootstrap-4.0.0.css" rel="stylesheet">
+	<link href="/static/css/my.css" rel="stylesheet">
+</head>
+
+<body style="background:url(/static/12bg1.jpg);background-size: 100% ;background-origin:border-box;opacity: 0.9;">
+	<div class="boxer-contain" style="position: absolute;left: 0; top:0;bottom:0;right:0;margin:auto; height: 80%;width:80%;opacity: 0.8;">
+		<div class="shade" style="position: absolute; background-color: #aaa5a5cb;left: 0; top:0;bottom:0;right:0;margin:auto; height: 94%;width:80%;opacity: 1;border-radius: 0.8rem;">
+
+		<div class="title" style="height:200px;">
+			<div class="text" style="text-align: center;">
+				<br></br>
+				<div class="text_diy1" style="font-size:56px">
+					<p>供应链金融平台 </p>
+				</div>
+			</div>
+		</div>
+	
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-9">
+				</div>
+			</div>
+		</div>
+		<div class="button_diy" style="height: 350px; z-index:9">
+			<div class="but_diy_1" style="width: 45%;float:left;text-align:right">
+				<a onclick="turnBillManage()"><img src="\static\zd3.png"></a>
+			</div>
+			<div class="but_diy_2" style="width: 45%;float:right;text-align:left">
+				<a onclick="turnBusinessManage()"><img src="\static\qy3.png"></a>
+			</div>
+		</div>
+		<div class="container_diy" style="text-align: center;"> <br>
+			<div class="row_diy">
+				<div class="text_diy2" style="font-size:22px">
+					<p>请根据操作，进行选择系统 </p>
+					<p>Copyright &copy; 2020 &middot; All Rights Reserved</p>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="/static/js/jquery-3.2.1.min.js"></script>
+
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="/static/js/popper.min.js"></script>
+	<script src="/static/js/bootstrap-4.0.0.js"></script>
+
+	<script>
+		function turnBillManage()
+		{
+			window.location.href="../BillManage/"; 
+		}
+
+		function turnBusinessManage()
+		{
+			var sendData={};
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("getLevel/", sendData, function(data, status){
+				if (status=="success")
+				{
+					if (data.level==1)
+					window.location.href="../BusinessManage/"; 
+					else
+					alert("仅限登记注册的金融机构使用企业管理系统！");
+				}
+				else
+				alert("打开失败！");
+			});
+		}
+
+	</script>
+
+</body>
+
+</html>

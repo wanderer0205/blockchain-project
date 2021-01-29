@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>登录-供应链金融平台</title>
+
+	<!-- Bootstrap -->
+	<link href="/static/css/bootstrap-4.0.0.css" rel="stylesheet">
+	<link href="/static/css/my.css" rel="stylesheet">
+</head>
+
+<body style="background:url(/static/6.jpg);background-size: 100% ;background-origin:border-box;opacity: 0.6;">
+
+
+	<!-- <div class="jumbotron jumbotron-fluid text-center">
+		<h1 class="display-4">图书销售管理系统</h1>
+	</div> -->
+<div class="boxer-contain" style="position: absolute;left: 0; top:0;bottom:0;right:0;margin:auto; height: 50%;width:70%;opacity: 1;">
+	<div class="shade" style="position: absolute; background-color: #ffffff;left: 0; top:0;bottom:0;right:0;margin:auto; height: 94%;width:40%;opacity: 1;border-radius: 0.8rem;">
+	</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-4 offset-4">
+				<form>
+					<div class="text-center col-12 mt-4 mb-5" style="font-weight:bold;color: #18038b">
+						<br></br>
+						<h3>&nbsp&nbsp&nbsp欢迎使用供应链金融平台！</h3>
+					</div>
+				    <div class="form-group row mb-4">
+					  <div class="col-3 text-center mt-2" style="color:black;font-weight:bold">
+						<label for="inputName">企业名</label>
+					  </div>
+					  <div class="col-8">
+					 	<input class="form-control" id="inputName" placeholder="请输入用户名">
+					  </div>
+					</div>
+				    <div class="form-group row mb-4">
+					  <div class="col-3 text-center mt-2" style="color:black;font-weight:bold">
+						<label for="inputPassword">密码</label>
+					  </div>
+					  <div class="col-8">
+					 	<input type="password" class="form-control" id="inputPassword" placeholder="请输入密码">
+					  </div>
+					</div>
+					<div >
+						<button type="button" class="btn btn-primary col-4 offset-1 mb-4 mt-4" onclick="register(this)">注册</button>
+						<button type="button" class="btn btn-primary col-4 offset-1 mb-4 mt-4" onclick="login(this)">登录</button>
+					</div >
+					<a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp警告：该系统处于演示模式，仅供demo，不产生实际交易。另：使用过程中注意网络安全以及隐私安全！</a>
+					<br></br>
+					<br></br>
+			  </form>
+				
+			</div>
+		</div>
+	</div>
+	<div class="container"> <br>
+		<div class="row">
+			<div class="text-center col-lg-6 offset-lg-3">
+				<p>拉到最底部了 </p>
+				<p>Copyright &copy; 2020 &middot; All Rights Reserved</p>
+			</div>
+		</div>
+	</div>
+</div>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="/static/js/jquery-3.2.1.min.js"></script>
+
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="/static/js/popper.min.js"></script>
+	<script src="/static/js/bootstrap-4.0.0.js"></script>
+	<script>
+		function register(obj)
+		{
+			obj.parentNode.parentNode.children[1].children[0].children[0].innerHTML="新企业名";
+			obj.parentNode.parentNode.children[2].children[0].children[0].innerHTML="新密码";
+			var parent=obj.parentNode;
+			var pparent=parent.parentNode;
+
+			var newElement = document.createElement("div");
+			newElement.setAttribute("class", "form-group row mb-4");
+			var div = document.createElement("div");
+			div.setAttribute("class", "col-3 text-center mt-2");
+			div.setAttribute("style", "color:black;font-weight:bold");
+			var label = document.createElement("label");
+			label.setAttribute("for", "inputLevel");
+			label.innerHTML="企业性质";
+			div.appendChild(label);
+			newElement.appendChild(div);
+
+			div = document.createElement("div");
+			div.setAttribute("class", "col-8");
+			var sel=document.createElement("select");
+			sel.setAttribute("id", "inputLevel");
+			var opt=document.createElement("option");
+			opt.setAttribute("value", 1);
+			opt.innerHTML="金融机构";
+			sel.appendChild(opt);
+			opt=document.createElement("option");
+			opt.setAttribute("value", 2);
+			opt.innerHTML="普通企业";
+			sel.appendChild(opt);
+			div.appendChild(sel);
+			newElement.appendChild(div);
+
+    		pparent.insertBefore(newElement,parent);
+
+			newElement = document.createElement("div");
+			newElement.setAttribute("class", "form-group row mb-4");
+			div = document.createElement("div");
+			div.setAttribute("class", "col-3 text-center mt-2");
+			div.setAttribute("style", "color:black;font-weight:bold");
+			label = document.createElement("label");
+			label.setAttribute("for", "inputCredit");
+			label.innerHTML="初始信用";
+			div.appendChild(label);
+			newElement.appendChild(div);
+
+			div = document.createElement("div");
+			div.setAttribute("class", "col-8");
+			var input=document.createElement("input");
+			input.setAttribute("type", "number");
+			input.setAttribute("min", "0");
+			input.setAttribute("onchange", "refresh_num(this)");
+			input.setAttribute("value", "0");
+			input.setAttribute("id", "inputCredit");
+			input.setAttribute("placeholder", "请输入初始信用");
+			div.appendChild(input);
+			newElement.appendChild(div);
+
+			pparent.insertBefore(newElement,parent);
+
+			var nextObj=obj.parentNode.children[1];
+			nextObj.setAttribute("onclick", "cancel()");
+			nextObj.innerHTML="取消";
+			obj.setAttribute("onclick", "sendRegister(this)");
+			obj.innerHTML="确认";
+		}
+
+		function sendRegister(obj)
+		{
+			var sendData={};
+			sendData.name=$('#inputName').val();
+			sendData.pass=$('#inputPassword').val();
+			sendData.level=$("#inputLevel").find("option:selected").val();
+			sendData.credit=$('#inputCredit').val();
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("sendRegister/", sendData, function(data, status){
+				if (status=="success" && data.isSuss==0)
+				{
+					alert("注册成功！");
+					location.reload();
+				}
+				else
+				{
+					alert("注册失败！"+data.info);
+				}
+			});
+		}
+
+		function cancel()
+		{
+			location.reload();
+		}
+		function refresh_num(obj)
+		{
+			if (obj.value=="")
+			obj.value=0;
+			else if (parseInt(obj.value)<0)
+			obj.value=0;
+		}
+
+		function login(obj)
+		{
+			var sendData={};
+			sendData.user=$('#inputName').val();
+			sendData.pass=$('#inputPassword').val();
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("./sendLogin/", sendData, function(data, status){
+				if (status=="success"&&data.isSuss==0)
+				{
+					alert("登录成功！");
+					window.location.href="../choose/"; 
+				}
+				else
+				alert("登录失败！\n"+data.info);
+			});
+		}
+	</script>
+</body>
+
+</html>

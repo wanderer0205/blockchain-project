@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>公司基本信息</title>
+
+	<!-- Bootstrap -->
+	<link href="/static/css/bootstrap-4.0.0.css" rel="stylesheet">
+	<link href="/static/css/my.css" rel="stylesheet">
+</head>
+
+<body>
+
+	<div class="jumbotron jumbotron-fluid text-center" style="background:url(/static/7.jpg);background-size: 100% ;background-origin:border-box;opacity: 0.9;">
+		<h1 class="display-diy" style="font-size: 70px;color: #130101d8;">公司基本信息</h1>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-2">
+				<nav class="navbar navbar-light">
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="../choose/">首页</a>
+						</li>
+                        <br>
+                        <li class="nav-item active">
+							<a class="nav-link">基本信息<span class="sr-only">(current)</span></a>
+						</li>
+                        <br>
+                        <li class="nav-item">
+							<a class="nav-link" href="../BillManage/">账单管理</a>
+                        </li>
+                        <br>
+                        {% if level == 1 %}
+                        <li class="nav-item">
+							<a class="nav-link" href="../BusinessManage/">企业管理</a>
+						</li>
+                        {% endif %}
+                        <br>
+						<li class="nav-item">
+							<a class="nav-link" onclick="logout()">退出</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+			<div class="col-9">
+				<ul id="clothingnav1" class="nav nav-tabs mb-4" role="tablist">
+					<li class="nav-item"> <a class="nav-link active" href="#home1" id="hometab1" role="tab"
+							data-toggle="tab" aria-controls="home" aria-expanded="true">企业基本信息</a> </li>
+				</ul>
+				<!-- Content Panel -->
+				<div id="clothingnavcontent1" class="tab-content">
+					<div role="tabpanel" class="tab-pane fade show active" id="home1" aria-labelledby="hometab1">
+						<div class="container-fluid">
+                            <p><strong> 企业名：</strong>{{ name }}</p>
+                            <p><strong> 企业性质：</strong>
+                                {% if level == 1 %}
+                                金融机构
+                                {% else %}
+                                普通企业
+                                {% endif %}
+                            </p>
+                            <p><strong> 企业账户地址：</strong>{{ address }}</p>
+                            <p><strong> 企业状态：</strong>
+                                {% if status == 0 %}
+								正常运营
+								<button type="button" class="btn btn-warning" onclick="broke(this)">一键破产</button>
+                                {% else %}
+								破产
+								<button type="button" class="btn btn-warning">一键恢复（装饰用）</button>
+                                {% endif %}
+                            </p>
+							<p><strong> 企业信用：</strong>{{ credit }}</p>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container"> <br>
+		<div class="row">
+			<div class="text-center col-lg-6 offset-lg-3">
+				<p>拉到最底部了 </p>
+				<p>Copyright &copy; 2020 &middot; All Rights Reserved</p>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="/static/js/jquery-3.2.1.min.js"></script>
+
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="/static/js/popper.min.js"></script>
+	<script src="/static/js/bootstrap-4.0.0.js"></script>
+	<script>
+		function logout()
+		{
+			var sendData={};
+			sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+			$.post("../logout/", sendData, function(data, status){
+				if (status=="success" && data.isSuss==0)
+				alert("退出成功！");
+				else
+				alert("退出失败");
+				location.reload();
+			});
+		}
+
+		function broke(obj)
+		{
+			if (confirm("考虑清楚了吗？QAQ"))
+			{
+				var sendData={};
+				sendData.csrfmiddlewaretoken='{{ csrf_token }}';
+				$.post("sendBroke/", sendData, function(data, status){
+					if (status=="success" && data.isSuss==0)
+					{
+						alert("破产成功！");
+						location.reload();
+					}
+					else
+					alert("破产失败！");
+				});
+			}
+		}
+	</script>
+</body>
+
+</html>

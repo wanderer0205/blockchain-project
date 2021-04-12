@@ -11,7 +11,7 @@
 组长：陈家豪
 
 ## 代码运行说明
-源代码和相关依赖在 `src` 文件夹中；按照[FISCO-BCOS官方教程](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/sdk/python_sdk/index.html)准备好python-sdk和相关依赖环境后，将platform.sol放在python-sdk/contracts/下，其余文件放在python-sdk/下；此外需要额外使用pip下载Django包。
+源代码和相关依赖在 `src` 文件夹中；按照[FISCO-BCOS官方教程](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/sdk/python_sdk/index.html)准备好python-sdk和相关依赖环境后，将platform.sol放在python-sdk/contracts/下，其余文件放在python-sdk/下；此外需要额外使用`pip install Django`和`pip install phe`下载Django包和phe包。
 
 启动方式：使用命令行进入路径python-sdk/，首先运行使用命令`python INIT.py`编译、部署智能合约，完成初始化，并获得同态加密密钥对；然后使用命令`python manage.py runserver 0.0.0.0:8000`运行Django web框架。打开浏览器访问http://主机IP地址:8000 ，即可使用（ 例如在主机上操作时，访问http://127.0.0.1:8000 ）。
 
@@ -24,4 +24,4 @@
 + 使用 Django 框架，实现了友好高效的用户界面；
 
 ## 联系方式
-Email: lixd36@mail2.sysu.edu.cn
+Email: chenjh328@mail2.sysu.edu.cn；lixd36@mail2.sysu.edu.cn
